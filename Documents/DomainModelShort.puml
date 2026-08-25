@@ -5,6 +5,16 @@ hide circle
 hide members
 skinparam shadowing false
 
+note as N2 #FFFFFF
+  <b>Notation</b>
+  1        præcis én
+  0..*   nul eller flere
+  1..*   én eller flere
+  ——   relation (ingen retning)
+end note
+
+
+
 package "Konto og profil" #F1F8E9 {
   class Bruger #E8F5E9
   class BrugerProfil #E8F5E9
