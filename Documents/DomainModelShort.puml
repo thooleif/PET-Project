@@ -1,0 +1,71 @@
+@startuml FitnessDomaenemodelMinimal
+title Domænemodel – Fitness Program (v3, kun begreber og relationer)
+
+hide circle
+hide members
+skinparam shadowing false
+
+package "Konto og profil" #F1F8E9 {
+  class Bruger #E8F5E9
+  class BrugerProfil #E8F5E9
+}
+
+package "Mål og ønsker" #FFF8E1 {
+  class FitnessMål #FFF3CD
+  class Delmål #FFF3CD
+  class TræningsPræference #FFF3CD
+}
+
+package "Program og kost" #FDECEA {
+  class FitnessProgram #FADBD8
+  class MakroPlan #FADBD8
+  class MakroJustering #FADBD8
+  class KosttilskudsAnbefaling #FADBD8
+  class Kosttilskud #FADBD8
+}
+
+package "Træningsplan" #EAF2FB {
+  class TræningsPlan #D6E4F0
+  class TræningsUge #D6E4F0
+  class TræningsDag #D6E4F0
+  class PlanlagtØvelse #D6E4F0
+  class Øvelse #D6E4F0
+}
+
+package "Gennemførsel og fremskridt" #F3E9F7 {
+  class TræningsPas #E8DAEF
+  class LoggetSæt #E8DAEF
+  class PersonligRekord #E8DAEF
+  class Vejning #E8DAEF
+}
+
+Bruger "1" -- "1" BrugerProfil : har
+Bruger "1" -- "0..*" FitnessMål : sætter
+Bruger "1" -- "1" TræningsPræference : angiver
+Bruger "1" -- "0..*" FitnessProgram : følger
+Bruger "1" -- "0..*" TræningsPas : gennemfører
+Bruger "1" -- "0..*" Vejning : registrerer
+Bruger "1" -- "0..*" PersonligRekord : opnår
+
+FitnessMål "1" -- "0..*" Delmål : indeholder
+FitnessMål "1" -- "0..*" FitnessProgram : ligger til grund for
+TræningsPræference "1" -- "0..*" FitnessProgram : former
+
+FitnessProgram "1" -- "1" MakroPlan : indeholder
+FitnessProgram "1" -- "1" TræningsPlan : indeholder
+FitnessProgram "1" -- "0..1" KosttilskudsAnbefaling : indeholder
+KosttilskudsAnbefaling "1" -- "1..*" Kosttilskud : anbefaler
+MakroPlan "1" -- "0..*" MakroJustering : ændres af
+Vejning "0..*" -- "0..1" MakroJustering : giver anledning til
+
+TræningsPlan "1" -- "1..*" TræningsUge : består af
+TræningsUge "1" -- "1..*" TræningsDag : indeholder
+TræningsDag "1" -- "0..*" PlanlagtØvelse : indeholder
+PlanlagtØvelse "0..*" -- "1" Øvelse : bygger på
+
+TræningsPas "0..*" -- "1" TræningsDag : udføres ud fra
+TræningsPas "1" -- "0..*" LoggetSæt : indeholder
+LoggetSæt "0..*" -- "1" PlanlagtØvelse : hører til
+PersonligRekord "0..*" -- "1" Øvelse : gælder for
+
+@enduml

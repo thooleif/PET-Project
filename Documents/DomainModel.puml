@@ -1,0 +1,222 @@
+@startuml FitnessDomaenemodel
+title Domænemodel – Fitness Program (v3)
+
+hide circle
+hide methods
+skinparam classAttributeIconSize 0
+skinparam shadowing false
+skinparam class {
+  BorderColor #666666
+  FontName Arial
+}
+
+note as N1 #E3F0FA
+  Modellen viser de centrale begreber i problemområdet
+  og hvordan de hænger sammen.
+  Den indeholder datafelter (egenskaber),
+  men ikke metoder eller implementationsdetaljer.
+end note
+
+note as N2 #FFFFFF
+  <b>Notation</b>
+  1        præcis én
+  0..*   nul eller flere
+  1..*   én eller flere
+  ——   relation (ingen retning)
+end note
+
+' ===================== KONTO OG PROFIL =====================
+package "Konto og profil" #F1F8E9 {
+
+  class Bruger #E8F5E9 {
+    * brugernavn
+    * email
+    * oprettet dato
+    * rolle (fx bruger, administrator)
+  }
+
+  class BrugerProfil #E8F5E9 {
+    * alder
+    * køn
+    * højde
+    * vægt
+    * aktivitetsniveau (fx stillesiddende, moderat, høj)
+    * erfaringsniveau (fx begynder, øvet, avanceret)
+    * skader og hensyn
+    * ønsket brug (fx kun makroer, kun træningslog, fuld pakke)
+  }
+}
+
+' ===================== MÅL OG ØNSKER =====================
+package "Mål og ønsker" #FFF8E1 {
+
+  class FitnessMål #FFF3CD {
+    * måltype (fx tage på, tabe sig, vedligeholde)
+    * startvægt
+    * målvægt
+    * deadline
+    * ønsket ugentlig vægtændring
+    * status (fx aktiv, nået, opgivet)
+  }
+
+  class Delmål #FFF3CD {
+    * beskrivelse
+    * målværdi
+    * enhed
+    * opnået
+  }
+
+  class TræningsPræference #FFF3CD {
+    * ønskede træningsformer (fx styrke, cardio, HIIT)
+    * fokus (fx almen livsstil, bodybuilding, sport)
+    * sportsgren
+    * træningsdage pr. uge
+    * ønsket varighed pr. træning
+  }
+}
+
+' ===================== PROGRAM OG KOST =====================
+package "Program og kost" #FDECEA {
+
+  class FitnessProgram #FADBD8 {
+    * oprettet dato
+    * varighed i uger
+    * status (fx aktiv, pauseret, afsluttet)
+  }
+
+  class MakroPlan #FADBD8 {
+    * kaloriemål
+    * protein pr. dag
+    * kulhydrat pr. dag
+    * fedt pr. dag
+    * manuelt justeret
+  }
+
+  class MakroJustering #FADBD8 {
+    * dato
+    * kalorier før
+    * kalorier efter
+    * årsag
+    * anbefaling til brugeren
+  }
+
+  class KosttilskudsAnbefaling #FADBD8 {
+    * dato
+    * begrundelse
+  }
+
+  class Kosttilskud #FADBD8 {
+    * navn
+    * formål
+    * doseringsforslag
+  }
+}
+
+' ===================== TRÆNINGSPLAN =====================
+package "Træningsplan" #EAF2FB {
+
+  class TræningsPlan #D6E4F0 {
+    * navn
+    * ugentlig struktur (split)
+    * hensyn til skader
+  }
+
+  class TræningsUge #D6E4F0 {
+    * ugenummer
+    * startdato
+    * slutdato
+    * status (fx planlagt, aktiv, gennemført)
+  }
+
+  class TræningsDag #D6E4F0 {
+    * dagnummer
+    * navn
+    * fokus (fx push, pull, ben, cardio, hvile)
+    * estimeret varighed
+  }
+
+  class PlanlagtØvelse #D6E4F0 {
+    * rækkefølge
+    * antal sæt
+    * antal gentagelser
+    * foreslået startvægt
+    * hviletid
+    * note om progression
+  }
+
+  class Øvelse #D6E4F0 {
+    * navn
+    * muskelgruppe
+    * udstyr
+    * sværhedsgrad (fx begynder, øvet, avanceret)
+    * skånsom ved skader
+    * video
+  }
+}
+
+' ===================== GENNEMFØRSEL OG FREMSKRIDT =====================
+package "Gennemførsel og fremskridt" #F3E9F7 {
+
+  class TræningsPas #E8DAEF {
+    * dato
+    * starttidspunkt
+    * sluttidspunkt
+    * status (fx i gang, gennemført, annulleret)
+    * noter
+  }
+
+  class LoggetSæt #E8DAEF {
+    * sætnummer
+    * antal gentagelser
+    * vægt
+    * oplevet anstrengelse
+    * tidspunkt
+  }
+
+  class PersonligRekord #E8DAEF {
+    * vægt
+    * antal gentagelser
+    * dato opnået
+  }
+
+  class Vejning #E8DAEF {
+    * dato
+    * vægt
+    * ugenummer
+    * noter
+  }
+}
+
+' ===================== RELATIONER =====================
+Bruger "1" -- "1" BrugerProfil : har
+Bruger "1" -- "0..*" FitnessMål : sætter
+Bruger "1" -- "1" TræningsPræference : angiver
+Bruger "1" -- "0..*" FitnessProgram : følger
+Bruger "1" -- "0..*" TræningsPas : gennemfører
+Bruger "1" -- "0..*" Vejning : registrerer
+Bruger "1" -- "0..*" PersonligRekord : opnår
+
+FitnessMål "1" -- "0..*" Delmål : indeholder
+FitnessMål "1" -- "0..*" FitnessProgram : ligger til grund for
+TræningsPræference "1" -- "0..*" FitnessProgram : former
+
+FitnessProgram "1" -- "1" MakroPlan : indeholder
+FitnessProgram "1" -- "1" TræningsPlan : indeholder
+FitnessProgram "1" -- "0..1" KosttilskudsAnbefaling : indeholder
+KosttilskudsAnbefaling "1" -- "1..*" Kosttilskud : anbefaler
+MakroPlan "1" -- "0..*" MakroJustering : ændres af
+Vejning "0..*" -- "0..1" MakroJustering : giver anledning til
+
+TræningsPlan "1" -- "1..*" TræningsUge : består af
+TræningsUge "1" -- "1..*" TræningsDag : indeholder
+TræningsDag "1" -- "0..*" PlanlagtØvelse : indeholder
+PlanlagtØvelse "0..*" -- "1" Øvelse : bygger på
+
+TræningsPas "0..*" -- "1" TræningsDag : udføres ud fra
+TræningsPas "1" -- "0..*" LoggetSæt : indeholder
+LoggetSæt "0..*" -- "1" PlanlagtØvelse : hører til
+PersonligRekord "0..*" -- "1" Øvelse : gælder for
+
+
+
+@enduml
