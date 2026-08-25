@@ -10,12 +10,7 @@ skinparam class {
   FontName Arial
 }
 
-note as N1 #E3F0FA
-  Modellen viser de centrale begreber i problemområdet
-  og hvordan de hænger sammen.
-  Den indeholder datafelter (egenskaber),
-  men ikke metoder eller implementationsdetaljer.
-end note
+
 
 note as N2 #FFFFFF
   <b>Notation</b>
