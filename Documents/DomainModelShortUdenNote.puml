@@ -1,6 +1,6 @@
 @startuml FitnessDomaenemodelMinimal
 title Domænemodel – Fitness Program (v3, kun begreber og relationer)
-
+'denne her model er lavet 100% efter pensum blot for at vise pensum forståelse'
 hide circle
 hide members
 skinparam shadowing false
